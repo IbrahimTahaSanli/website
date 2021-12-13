@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Articles";
+}
+@using SiteBackEnd.Views.Home
+@model SiteBackEnd.Views.Home.Articles.Index
+
+<style>
+    .board-0 {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        flex-direction: row;
+    }
+
+    .board-0 a {
+        text-decoration: unset;
+    }
+
+    .board-1 {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
+    .board-2 {
+        flex: 0.2;
+        display: flex;
+        flex-direction: row;
+        background-color: #52475a;
+        margin: 1%;
+        align-items: center;
+        overflow: hidden;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .board-photo {
+        flex: 0.3;
+        width: 30%;
+        height: 80%;
+        padding: 1%;
+    }
+
+    .board-texts {
+        width: 70%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .board-text-h {
+        font-size: 1.5em;
+        margin: 2%;
+    }
+
+    .board-text-p {
+        font-size: 1em;
+        margin: 2%;
+    }
+
+    .left-arrow {
+        font-size: 4em;
+        margin: auto 0;
+    }
+
+    .expect{
+        margin:0 auto;
+        align-self: center;
+
+    }
+</style>
+
+<div class="board-0">
+    @if (Model.Count != 0)
+    {
+        if (Model.CurrentPageNumber != 0)
+        {
+            <a class="left-arrow" href="/articles/@(Model.CurrentPageNumber - 1)/">&#x2B9C;</a>
+        }
+
+        <div class="board-1">
+            @foreach (var tmp in Model.boards)
+            {
+            <a class="board-2" href="@("/articles/article/"+tmp.Path)">
+                <div style="margin:unset;flex:1;" class="board-2">
+                    <img class="board-photo" src=@(tmp.PhotoPath) />
+                    <div class="board-texts">
+                        <p class="board-text-h">
+                            @(tmp.Name)
+                        </p>
+                        <p class="board-text-p">
+                            @(tmp.Description))
+                        </p>
+                    </div>
+                </div>
+            </a>
+            }
+
+        </div>
+        if (Model.CurrentPageNumber + 1 < Model.AllPageNumber)
+        {
+            <a class="left-arrow" href="/articles/@(Model.CurrentPageNumber + 1)/">&#x2B9E;</a>
+        }
+    }
+    else
+    {
+        <p class="expect">What else do you expecting from me?</p>
+    }
+</div>

@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="/style.css"></link>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="header" class="header">
+            <a href="/" class="header-img-a">
+                <img id="headerPhoto" src="/Photos/headerPhoto.png"/>
+            </a>
+            <i></i>
+            <a class="header-a" href="/opinions">I Have Opinion Too</aclass>
+            <a class="header-a" href="/whoami">whoami</rp>
+            <a class="header-a" href="/articles">Articles</a>
+            <a class="header-a" href="/reachtome">Reach To Me</a>
+        </div>
+        <div class="top">
+            @RenderBody()
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+const FPS = 60
+const FRAME = 1/FPS
+
+swipeAnimMap = new Map();
+fadeAnimMap = new Map();
+
+debugTime = new Date()
+
+
+async function swipe(sElem,to,duration){
+
+    clearInterval(swipeAnimMap.get(sElem.id))
+
+    let X = window.getComputedStyle(sElem).getPropertyValue('left')
+    let swipeX = parseFloat(X.substr(0,X.length-1))
+
+    let Y = window.getComputedStyle(sElem).getPropertyValue('top')
+    let swipeY = parseFloat(Y.substr(0,Y.length-1))
+
+
+    X = to[0] - swipeX
+    Y = to[1] - swipeY
+
+    X *= FRAME * (1/duration)
+    Y *= FRAME * (1/duration)
+
+    let conuterSwipe = Math.floor(duration * FPS)
+
+    swipeAnimMap.set(sElem.id,setInterval(()=>{
+        if(conuterSwipe==0){
+            sElem.style.left = to[0] + "%"
+            sElem.style.top = to[1] + "%"
+            clearInterval(swipeAnimMap.get(sElem.id));
+            return
+        }
+        swipeX += X
+        swipeY += Y
+        sElem.style.left = (swipeX) + "%"
+        sElem.style.top = (swipeY) + "%"
+        conuterSwipe--
+    },FRAME*1000))
+
+    }
+
+
+
+    async function fade(elem,to,duration){
+        clearInterval(fadeAnimMap.get(elem.id))
+
+        let opa = parseFloat(window.getComputedStyle(elem).getPropertyValue('opacity'))
+        let X = to - opa
+
+        X *= FRAME * (1/duration)
+
+        let counter = Math.floor(duration*FPS)
+
+        fadeAnimMap.set(elem.id, setInterval(()=>{
+            if(counter == 0){
+                elem.style.opacity = to.toString()
+                clearInterval(fadeAnimMap.get(elem.id))
+                return
+            }
+            opa += X
+            elem.style.opacity = opa.toString()
+            counter--
+        },FRAME*1000))
+
+    }
+</script>
+
+<script>
+let currentPos = 0
+let currentContent = 1
+const MAX_CONTENT=3
+let topContent = document.getElementById("topContent")
+let TopContentInterval = null
+
+async function goToContent(elem){
+    clearInterval(firstAnimInter)
+    if(TopContentInterval)
+        return
+
+
+    if(elem.id && elem.id.startsWith("dot"))
+        elem = parseInt(elem.id.substr(elem.id.lastIndexOf("-")+1))
+    else
+        elem = currentContent + elem
+
+    let i = elem - currentContent
+    let toWhere = (elem-1) * 100 - currentPos
+
+
+    TopContentInterval = setInterval(()=>{
+        if(Math.abs(toWhere) <= 1){
+            currentContent = elem
+            topContent.style.left ="-" + (currentContent-1)*100 + "%"
+            clearInterval(TopContentInterval)
+            TopContentInterval = null
+            return
+        }
+
+        toWhere -= i
+        currentPos += i
+
+
+
+        topContent.style.left ="-" + currentPos + "%"
+    },1)
+
+
+
+}
+</script>
+
+<script>
+barMap = new Map()
+async function onBarHover(elem){
+    clearInterval(barMap.get(elem.id))
+
+    let opa = parseFloat(window.getComputedStyle(elem.children[0]).getPropertyValue('opacity'))
+
+    barMap.set(elem.id,setInterval(()=>{
+        if(opa>=1)
+            clearInterval(barMap.get(elem.id));
+        opa += 0.01
+        for(let j = 0; j < elem.children.length;j++ ){
+            elem.children[j].style.opacity = opa.toString()
+        }
+    },1/6)
+    )
+}
+async function onBarExit(elem){
+    clearInterval(barMap.get(elem.id))
+
+    let opa = window.getComputedStyle(elem.children[0]).getPropertyValue('opacity')
+
+    barMap.set(elem.id,setInterval(()=>{
+        if(opa<=0)
+            clearInterval(barMap.get(elem.id));
+        opa -= 0.01
+        for(let j = 0; j < elem.children.length;j++ ){
+            elem.children[j].style.opacity = opa.toString()
+        }
+    },1/6)
+    )
+}
+</script>
+
+<script>
+ind = -200
+document.getElementById("headerPhoto").style.bottom = "-"+ind+"%"
+
+headerPhotoInterval = null
+function slideHeaderPhoto(way){
+    let headerPhoto = document.getElementById("headerPhoto")
+
+    if(way > 0)
+        ind = -200
+    else
+        ind = 200
+
+    headerPhotoInterval = setInterval(()=>{
+        ind += way
+        headerPhoto.style.bottom = ind + "%"
+        if(way > 0 ? ind >= -8 : ind <= -8 )
+            clearInterval(headerPhotoInterval)
+    },1/144)
+}
+
+
+</script>
+
+<script>
+    slideHeaderPhoto(+2)
+    
+
+</script>

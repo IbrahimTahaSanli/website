@@ -1,0 +1,270 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Home Page";
+    const int viewCount = 3;
+}
+@using SiteBackEnd.Views.Home
+@model SiteBackEnd.Views.Home.Index
+
+<style>
+    .bar {
+        display: flex;
+        width: 20%;
+        height: 5%;
+        flex-wrap: nowrap;
+        position: absolute;
+        align-self: center;
+        align-content: space-between;
+        justify-content: space-between;
+        z-index: 4;
+    }
+
+    .bar-dots-outside {
+        color: white;
+        height: 2vh;
+        width: 2vh;
+        border-style: solid;
+        border-color: #c3c3c3;
+        border-radius: 100%;
+        border-width: 3%;
+        opacity: 1;
+        align-self: center;
+    }
+
+    .bar-dots-inside-back {
+        opacity: 0;
+        background-color: #c3c3c3;
+        width: 100%;
+        height: 100%;
+    }
+
+    .bar-dots-inside-texts {
+        opacity: 0;
+        color: black;
+        top: -200%;
+        position: relative;
+    }
+
+    .top-content {
+        height: 100%;
+        margin: 0%;
+        padding: 0;
+        display: flex;
+        position: relative;
+    }
+
+    .top-content-wrapper {
+        width: 50%;
+        height: 100%;
+        background-color: green;
+        display: inline-block;
+        position: relative;
+    }
+
+    #top-content-1 {
+        background-color: #1d1623;
+        display: flex;
+        align-content: space-around;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    #why {
+        text-align: center;
+        position: relative;
+        left: 0%;
+        top: -12.5%;
+        opacity: 0;
+        font-size: 4em;
+        font-family: 'Bebas Neue', cursive;
+        letter-spacing: 4px;
+    }
+
+    #why1 {
+        text-align: center;
+        position: relative;
+        left: 0%;
+        opacity: 1;
+        font-size: 1.5em;
+        font-family: 'Bebas Neue', cursive;
+    }
+
+    #top-content-2 {
+        background-color: #493856;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .top-content-2-row {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+    }
+
+    .top-content-2-header {
+        flex: 0.9;
+        margin: 0 auto;
+        font-size: 2em;
+        font-family: 'Bebas Neue', cursive;
+        position: relative;
+        border-bottom-style: solid;
+    }
+
+    .top-content-2-header-div {
+        flex-grow: 0;
+        padding-top: 2%;
+    }
+
+    .top-content-2-header-inside {
+        flex: 0.8;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        background-color: #43344e;
+    }
+
+    .top-content-2-board {
+        flex: 0.3;
+        margin-bottom: 2%;
+        margin-top: 2%;
+        display: flex;
+        flex-direction: column;
+        background-color: #52475a;
+        width: 30%;
+    }
+
+        .top-content-2-board img {
+            flex: 0.5;
+            width: 100%;
+            height: 100%;
+        }
+
+    .top-content-2-text {
+        margin: 0 5%;
+    }
+
+        .top-content-2-text h1 {
+            font-size: 1.5em;
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        .top-content-2-text p {
+            font-size: 1em;
+            font-family: 'Bebas Neue', cursive;
+        }
+
+    .top-content-width{
+        width:@(viewCount*100)%;
+    }
+</style>
+
+<div class="bar">
+    @for (int i = 1; i <= viewCount; i++)
+    {
+        <div onmouseover="onBarHover(this)" onmouseout="onBarExit(this)" onclick="goToContent(this)" id="dot-@(i)" class="bar-dots-outside">
+            <div id="dot-@(i)-in" class="bar-dots-inside-back"></div>
+        </div>
+    }
+</div>
+
+<div id="topContent" class="top-content top-content-width">
+    <div id="top-content-1" class="top-content-wrapper">
+        <div>
+            <h1 id="why">
+                HELLLLO
+            </h1>
+        </div>
+        <p id="why1">
+            Now, Why we gathered?
+        </p>
+    </div>
+
+
+    <div id="top-content-2" class="top-content-wrapper">
+        <div style="flex:1; padding-bottom: 10%; display: flex; flex-direction: column;">
+            <div class="top-content-2-row top-content-2-header-div">
+                <p class="top-content-2-header">Latest: </p>
+            </div>
+            <div class="top-content-2-row top-content-2-header-div">
+                <p class="top-content-2-header" style="flex: 0.8;">My latest opinions:</p>
+            </div>
+            <div class="top-content-2-row">
+                <div class="top-content-2-header-inside">
+                    @if (Model.OpinionList.Length == 0)
+                    {
+                        <p style="align-self:center;">
+                            Clean for now.
+                        </p>
+                    }
+                    else
+                    {
+                        foreach (SiteBackEnd.Models.Home.HomeBoard tmp in Model.OpinionList)
+                        {
+                            <a class="top-content-2-board" href="@("/opinions/opinion/"+tmp.Path)">
+                                <img src="./Photos/no1.jpg" />
+                                <div class="top-content-2-text">
+                                    <h1>@(tmp.Name)</h1>
+                                    <p>@(tmp.Description)</p>
+                                </div>
+                            </a>
+                        }
+                    if (Model.OpinionList.Length == 3)
+                    {
+                    <a style="align-self: center;font-size:3em; color:black; text-decoration:unset;" href="/opinions">&#x22EE</a>};
+                    }
+                </div>
+            </div>
+            <div class="top-content-2-row top-content-2-header-div">
+                <p class="top-content-2-header" style="flex: 0.8; bottom: 10%;">My latest articles:</p>
+            </div>
+            <div class="top-content-2-row">
+                <div class="top-content-2-header-inside">
+                    @if (Model.ArticleList.Length == 0)
+                    {
+                        <p style="align-self:center;">
+                            Clean for now.
+                        </p>
+                    }
+                    else
+                    {
+                        foreach (SiteBackEnd.Models.Home.HomeBoard tmp in Model.ArticleList)
+                        {
+                            <a class="top-content-2-board" href="@("/articles/article/"+tmp.Path)">
+                                <img src="./Photos/no1.jpg" />
+                                <div class="top-content-2-text">
+                                    <h1>@(tmp.Name)</h1>
+                                    <p>@(tmp.Description)</p>
+                                </div>
+                            </a>
+                        }
+                    if (Model.ArticleList.Length == 3)
+                    {
+                        <p style="align-self: center;font-size:3em; color:black; text-decoration:unset;" href="/articles">&#x22EE</p>
+                    };
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="top-content-3" class="top-content-wrapper">
+        <p>I haven't think here right now.</p>
+    </div>
+
+</div>
+
+<script>
+    firstAnimInter = null
+
+    window.onload = function(){
+    swipe(document.getElementById("why"), [0, 0], 1)
+    fade(document.getElementById("why"),1,1)
+
+    firstAnimInter = setTimeout(()=>goToContent(1),1000)
+    }
+     
+</script>
